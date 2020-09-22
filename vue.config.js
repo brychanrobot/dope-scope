@@ -15,15 +15,20 @@
 const fs = require("fs");
 const os = require("os");
 
-module.exports = {
-  devServer: {
+let devServer = undefined;
+if (process.env.NODE_ENV !== 'production') {
+  devServer = {
     https: {
       key: fs.readFileSync("./ssl/server.pem"),
       cert: fs.readFileSync("./ssl/server.crt")
     },
     disableHostCheck: true,
     public: `https://${os.hostname()}:8080/`
-  },
+  };
+}
+
+module.exports = {
+  devServer,
   configureWebpack: {
     module: {
       rules: [
