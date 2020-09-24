@@ -1,16 +1,18 @@
-// Copyright 2020 Google LLC
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+<!--
+Copyright 2020 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 
 <template>
   <div class="hello">
@@ -21,8 +23,8 @@
 </template>
 
 <script lang="ts">
+import { Options, Vue } from "vue-class-component";
 import WebGLplot, { WebglLine, ColorRGBA } from "webgl-plot";
-import { Component, Prop, Vue } from "vue-property-decorator";
 import {
   Owon,
   Voltage,
@@ -35,14 +37,18 @@ import {
   TriggerSlope
 } from "../driver/owon";
 
-@Component
+@Options({
+  props: {
+    msg: String
+  }
+})
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+  msg!: string;
   private ch1Line_?: WebglLine;
   private timeIndex_ = 0;
   private chart_?: WebGLplot;
 
-  private mounted() {
+  private onMounted() {
     const chartCanvas = this.$refs.chart as HTMLCanvasElement;
     const devicePixelRatio = window.devicePixelRatio || 1;
     chartCanvas.width = chartCanvas.clientWidth * devicePixelRatio;
@@ -86,7 +92,7 @@ export default class HelloWorld extends Vue {
       mode: TriggerMode.SINGLE,
       slope: TriggerSlope.RISING,
       holdoffSeconds: 0.001,
-      triggerLevel: 36,
+      triggerLevel: 36
     });
 
     console.log("configure timebase");
@@ -114,7 +120,7 @@ export default class HelloWorld extends Vue {
     const channel = dataView.getUint8(0);
     console.log("gotData: ", channel, dataView);
     const multiplier = 1 / 3096.0;
-    const floatData= new Float32Array(1275);
+    const floatData = new Float32Array(1275);
     try {
       for (
         let byteIndex = 11 + 100, timeIndex = 0;
